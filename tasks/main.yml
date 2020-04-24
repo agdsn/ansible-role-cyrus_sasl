@@ -17,7 +17,7 @@
   with_dict: "{{ cyrus_sasl_config }}"
 
 - name: Get all SASL users
-  shell: "{{ cyrus_sasl_sasldblistusers_command }} | cut -f1 -d':'"
+  shell: "{{ cyrus_sasl_sasldblistusers_command }} -f '{{ cyrus_sasl_sasldb_file }}' | cut -f1 -d':'"
   register: register_sasldblistusers
   changed_when: false
 
