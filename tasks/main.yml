@@ -34,6 +34,17 @@
     - item.value.state == 'absent'
     - item.key ~ '@' ~ item.value.domain in register_sasldblistusers.stdout_lines
 
+- name: Delete non existing SASL users
+  shell: "{{ cyrus_sasl_saslpassword_command }} -u '{{ cyrus_sasldb_user_domain }}' -d -f '{{ cyrus_sasl_sasldb_file }}' '{{ cyrus_sasldb_user_name }}'"
+  with_items: "{{ register_sasldblistusers.stdout_lines }}"
+  no_log: "{% if cyrus_sasl_debug %}no{% else %}yes{% endif %}"
+  vars:
+    cyrus_sasldb_user_name: "{{ item.split('@')[0] }}"
+    cyrus_sasldb_user_domain: "{{ item.split('@')[1] }}"
+  when:
+    - cyrus_sasl_user_force
+    - cyrus_sasldb_user_name not in cyrus_sasl_user or cyrus_sasldb_user_domain != cyrus_sasl_user[cyrus_sasldb_user_name].domain
+
 - name: Create SASL users
   shell: "echo -n {{ item.value.password }} | {{ cyrus_sasl_saslpassword_command }} -a '{{ item.value.appname }}' -u '{{ item.value.domain }}' -c -p -f '{{ cyrus_sasl_sasldb_file }}' {{ item.key }}"
   with_dict: "{{ cyrus_sasl_user }}"

@@ -13,4 +13,5 @@ cyrus_sasl_sasldb_file_permission: "{{  __cyrus_sasl_sasldb_file_permission }}"
 cyrus_sasl_debug: no
 
 cyrus_sasl_user: {}
+cyrus_sasl_user_force: no
 cyrus_sasl_config: {}
