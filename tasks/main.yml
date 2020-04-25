@@ -18,13 +18,10 @@
 
 - name: Get all SASL users
   shell: "{{ cyrus_sasl_sasldblistusers_command }} -f '{{ cyrus_sasl_sasldb_file }}' | cut -f1 -d':'"
+  check_mode: no
   register: register_sasldblistusers
   changed_when: false
-
-- name: Assert cyrus_sasl_sasldblistusers_command ran successfully
-  assert:
-    that:
-      register_sasldblistusers.rc == 0
+  failed_when: register_sasldblistusers.rc != 0
 
 - name: Delete SASL users
   shell: "{{ cyrus_sasl_saslpassword_command }} -a '{{ item.value.appname }}' -u '{{ item.value.domain }}' -d -f '{{ cyrus_sasl_sasldb_file }}' '{{ item.key }}'"
@@ -102,6 +99,7 @@
   with_items: "{{ register_sasl_check_pw.results }}"
   no_log: "{% if cyrus_sasl_debug %}no{% else %}yes{% endif %}"
   when:
+    - not ansible_check_mode
     - "'does not match' in item.stdout_lines"
 
 - name: Start saslauthd
