@@ -70,12 +70,6 @@
   when:
     - register_sasldb_file.stat.exists
 
-- name: Create /usr/local/bin
-  file:
-    path: /usr/local/bin
-    state: directory
-    mode: 0755
-
 - name: Create sasl_check_pw.py
   # XXX this script assumes dbm file
   template:
