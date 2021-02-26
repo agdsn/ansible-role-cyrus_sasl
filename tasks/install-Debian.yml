@@ -34,3 +34,10 @@
   apt:
     name: sasl2-bin
     state: present
+
+# required by sasl_check_pw.py
+- name: Install python3-bsddb3
+  apt:
+    name: python3-bsddb3
+    state: present
+  when: ansible_python.version.major == 3

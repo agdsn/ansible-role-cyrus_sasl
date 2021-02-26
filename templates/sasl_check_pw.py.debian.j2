@@ -1,0 +1,20 @@
+#!/usr/bin/env {{ ansible_python.executable }}
+import os
+import sys
+import bsddb3
+
+db_path = sys.argv[1]
+user = sys.argv[2]
+domain = sys.argv[3]
+password = os.environ["userPassword"]
+
+seq = (user, domain, "userPassword")
+key = chr(0).join( seq ).encode('ascii')
+
+db = bsddb3.db.DB()
+db.open(db_path, flags=bsddb3.db.DB_RDONLY)
+if key in db.keys() and db[key].decode('ascii') == password:
+    print("matched")
+else:
+    print("does not match")
+db.close()

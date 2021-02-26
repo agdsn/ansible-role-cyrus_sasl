@@ -73,7 +73,7 @@
 - name: Create sasl_check_pw.py
   # XXX this script assumes dbm file
   template:
-    src: "{% if ansible_python.version.major == 2 %}sasl_check_pw.py2.j2{% else %}sasl_check_pw.py.j2{% endif %}"
+    src: "{% if ansible_python.version.major == 2 %}sasl_check_pw.py2.j2{% elif ansible_os_family == 'Debian' %}sasl_check_pw.py.debian.j2{% else %}sasl_check_pw.py.j2{% endif %}"
     dest: /usr/local/bin/sasl_check_pw
     mode: 0755
 
